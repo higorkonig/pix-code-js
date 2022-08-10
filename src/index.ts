@@ -1,3 +1,5 @@
+import QRCode from 'qrcode';
+
 const ID_PAYLOAD_FORMAT_INDICATOR = "00";
 const ID_MERCHANT_ACCOUNT_INFORMATION = "26";
 const ID_MERCHANT_ACCOUNT_INFORMATION_GUI = "00";
@@ -13,7 +15,7 @@ const ID_ADDITIONAL_DATA_FIELD_TEMPLATE = "62";
 const ID_ADDITIONAL_DATA_FIELD_TEMPLATE_TXID = "05";
 const ID_CRC16 = "63";
 
-class Pix {
+export class Pix {
   private chavePix: string
   private descricao: string
   private nomeRecebedor: string
@@ -21,13 +23,13 @@ class Pix {
   private codigoTransferencia: string
   private valor: string
 
-  constructor(chavePix: string, nomeRecebedor: string, cidadeRecebedor: string, valor: number, descricao?: string, codigoTransferencia?: string,) {
+  constructor(chavePix: string, nomeRecebedor: string, cidadeRecebedor: string, valor?: number, descricao?: string, codigoTransferencia?: string,) {
     this.chavePix = chavePix;
     this.descricao = descricao ? descricao : '';
     this.nomeRecebedor = nomeRecebedor;
     this.cidadeRecebedor = cidadeRecebedor;
     this.codigoTransferencia = codigoTransferencia ? codigoTransferencia : '***';
-    this.valor = valor.toFixed(2);
+    this.valor = valor ? valor.toFixed(2) : '';
   }
 
   private _getIdETamanhoEvalor(id: string, valor: string): string {
@@ -39,7 +41,7 @@ class Pix {
     const gui = this._getIdETamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION_GUI, "BR.GOV.BCB.PIX");
     const chave = this._getIdETamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION_KEY, this.chavePix);
 
-    if(this.descricao) return this._getIdETamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION, gui + chave + this._getIdETamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION_DESCRIPTION, this.descricao));
+    if (this.descricao) return this._getIdETamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION, gui + chave + this._getIdETamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION_DESCRIPTION, this.descricao));
 
     return this._getIdETamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION, gui + chave);
   }
@@ -58,14 +60,18 @@ class Pix {
       this._getIdETamanhoEvalor(ID_PAYLOAD_FORMAT_INDICATOR, "01") +
       this._montarInfomacoesDoRecebedor() +
       this._getIdETamanhoEvalor(ID_MERCHANT_CATEGORY_CODE, "0000") +
-      this._getIdETamanhoEvalor(ID_TRANSACTION_CURRENCY, "986") +
-      this._getIdETamanhoEvalor(ID_TRANSACTION_AMOUNT, this.valor) +
-      this._getIdETamanhoEvalor(ID_COUNTRY_CODE, "BR") +
+      this._getIdETamanhoEvalor(ID_TRANSACTION_CURRENCY, "986");
+    if (this.valor) payload += this._getIdETamanhoEvalor(ID_TRANSACTION_AMOUNT, this.valor);
+    payload += this._getIdETamanhoEvalor(ID_COUNTRY_CODE, "BR") +
       this._getIdETamanhoEvalor(ID_MERCHANT_NAME, this.nomeRecebedor) +
       this._getIdETamanhoEvalor(ID_MERCHANT_CITY, this.cidadeRecebedor) +
       this._getAdicionalInformacao();
 
     return payload + this._getCRC16(payload);
+  }
+
+  public async generateQRCode() {
+    return await QRCode.toDataURL(this.generateCode());
   }
 
   private _getCRC16(payload: string): string {
@@ -101,6 +107,4 @@ class Pix {
     return ID_CRC16 + "04" + dechex(resultado).toUpperCase();
   }
 
-}
-
-export default Pix;
+};
