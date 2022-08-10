@@ -37,9 +37,7 @@ o comando [`npm init`](https://docs.npmjs.com/creating-a-package-json-file).
 
 ```console
 $ yarn add @higorkonig/pix-js
-
 ou
-
 $ npm i @higorkonig/pix-js
 ```
 
@@ -50,6 +48,8 @@ $ npm i @higorkonig/pix-js
 | chavePix        |          36 |
 | nomeRecebedor   |          13 |
 | cidadeRecebedor |          08 |
+
+
 
 ```JS
 //Parâmetros opcionais
