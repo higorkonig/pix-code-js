@@ -6,7 +6,7 @@ export declare class Pix {
     private codigoTransferencia;
     private valor;
     constructor(chavePix: string, nomeRecebedor: string, cidadeRecebedor: string, valor?: number, descricao?: string, codigoTransferencia?: string);
-    private _getIdETamanhoEvalor;
+    private _getIdTamanhoEvalor;
     private _montarInfomacoesDoRecebedor;
     private _getAdicionalInformacao;
     generateCode(): string;

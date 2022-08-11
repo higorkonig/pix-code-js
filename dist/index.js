@@ -64,31 +64,31 @@ var Pix = /** @class */ (function () {
         this.codigoTransferencia = codigoTransferencia ? codigoTransferencia : '***';
         this.valor = valor ? valor.toFixed(2) : '';
     }
-    Pix.prototype._getIdETamanhoEvalor = function (id, valor) {
+    Pix.prototype._getIdTamanhoEvalor = function (id, valor) {
         var size = String(valor.length).padStart(2, "0");
         return id + size + valor;
     };
     Pix.prototype._montarInfomacoesDoRecebedor = function () {
-        var gui = this._getIdETamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION_GUI, "BR.GOV.BCB.PIX");
-        var chave = this._getIdETamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION_KEY, this.chavePix);
+        var gui = this._getIdTamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION_GUI, "BR.GOV.BCB.PIX");
+        var chave = this._getIdTamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION_KEY, this.chavePix);
         if (this.descricao)
-            return this._getIdETamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION, gui + chave + this._getIdETamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION_DESCRIPTION, this.descricao));
-        return this._getIdETamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION, gui + chave);
+            return this._getIdTamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION, gui + chave + this._getIdTamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION_DESCRIPTION, this.descricao));
+        return this._getIdTamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION, gui + chave);
     };
     Pix.prototype._getAdicionalInformacao = function () {
-        var txid = this._getIdETamanhoEvalor(ID_ADDITIONAL_DATA_FIELD_TEMPLATE_TXID, this.codigoTransferencia);
-        return this._getIdETamanhoEvalor(ID_ADDITIONAL_DATA_FIELD_TEMPLATE, txid);
+        var txid = this._getIdTamanhoEvalor(ID_ADDITIONAL_DATA_FIELD_TEMPLATE_TXID, this.codigoTransferencia);
+        return this._getIdTamanhoEvalor(ID_ADDITIONAL_DATA_FIELD_TEMPLATE, txid);
     };
     Pix.prototype.generateCode = function () {
-        var payload = this._getIdETamanhoEvalor(ID_PAYLOAD_FORMAT_INDICATOR, "01") +
+        var payload = this._getIdTamanhoEvalor(ID_PAYLOAD_FORMAT_INDICATOR, "01") +
             this._montarInfomacoesDoRecebedor() +
-            this._getIdETamanhoEvalor(ID_MERCHANT_CATEGORY_CODE, "0000") +
-            this._getIdETamanhoEvalor(ID_TRANSACTION_CURRENCY, "986");
+            this._getIdTamanhoEvalor(ID_MERCHANT_CATEGORY_CODE, "0000") +
+            this._getIdTamanhoEvalor(ID_TRANSACTION_CURRENCY, "986");
         if (this.valor)
-            payload += this._getIdETamanhoEvalor(ID_TRANSACTION_AMOUNT, this.valor);
-        payload += this._getIdETamanhoEvalor(ID_COUNTRY_CODE, "BR") +
-            this._getIdETamanhoEvalor(ID_MERCHANT_NAME, this.nomeRecebedor) +
-            this._getIdETamanhoEvalor(ID_MERCHANT_CITY, this.cidadeRecebedor) +
+            payload += this._getIdTamanhoEvalor(ID_TRANSACTION_AMOUNT, this.valor);
+        payload += this._getIdTamanhoEvalor(ID_COUNTRY_CODE, "BR") +
+            this._getIdTamanhoEvalor(ID_MERCHANT_NAME, this.nomeRecebedor) +
+            this._getIdTamanhoEvalor(ID_MERCHANT_CITY, this.cidadeRecebedor) +
             this._getAdicionalInformacao();
         return payload + this._getCRC16(payload);
     };

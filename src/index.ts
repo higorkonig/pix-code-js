@@ -32,39 +32,39 @@ export class Pix {
     this.valor = valor ? valor.toFixed(2) : '';
   }
 
-  private _getIdETamanhoEvalor(id: string, valor: string): string {
+  private _getIdTamanhoEvalor(id: string, valor: string): string {
     const size = String(valor.length).padStart(2, "0");
     return id + size + valor;
   }
 
   private _montarInfomacoesDoRecebedor(): string {
-    const gui = this._getIdETamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION_GUI, "BR.GOV.BCB.PIX");
-    const chave = this._getIdETamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION_KEY, this.chavePix);
+    const gui = this._getIdTamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION_GUI, "BR.GOV.BCB.PIX");
+    const chave = this._getIdTamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION_KEY, this.chavePix);
 
-    if (this.descricao) return this._getIdETamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION, gui + chave + this._getIdETamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION_DESCRIPTION, this.descricao));
+    if (this.descricao) return this._getIdTamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION, gui + chave + this._getIdTamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION_DESCRIPTION, this.descricao));
 
-    return this._getIdETamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION, gui + chave);
+    return this._getIdTamanhoEvalor(ID_MERCHANT_ACCOUNT_INFORMATION, gui + chave);
   }
 
   private _getAdicionalInformacao() {
-    const txid = this._getIdETamanhoEvalor(
+    const txid = this._getIdTamanhoEvalor(
       ID_ADDITIONAL_DATA_FIELD_TEMPLATE_TXID,
       this.codigoTransferencia
     );
-    return this._getIdETamanhoEvalor(ID_ADDITIONAL_DATA_FIELD_TEMPLATE, txid);
+    return this._getIdTamanhoEvalor(ID_ADDITIONAL_DATA_FIELD_TEMPLATE, txid);
   }
 
 
   public generateCode() {
     let payload =
-      this._getIdETamanhoEvalor(ID_PAYLOAD_FORMAT_INDICATOR, "01") +
+      this._getIdTamanhoEvalor(ID_PAYLOAD_FORMAT_INDICATOR, "01") +
       this._montarInfomacoesDoRecebedor() +
-      this._getIdETamanhoEvalor(ID_MERCHANT_CATEGORY_CODE, "0000") +
-      this._getIdETamanhoEvalor(ID_TRANSACTION_CURRENCY, "986");
-    if (this.valor) payload += this._getIdETamanhoEvalor(ID_TRANSACTION_AMOUNT, this.valor);
-    payload += this._getIdETamanhoEvalor(ID_COUNTRY_CODE, "BR") +
-      this._getIdETamanhoEvalor(ID_MERCHANT_NAME, this.nomeRecebedor) +
-      this._getIdETamanhoEvalor(ID_MERCHANT_CITY, this.cidadeRecebedor) +
+      this._getIdTamanhoEvalor(ID_MERCHANT_CATEGORY_CODE, "0000") +
+      this._getIdTamanhoEvalor(ID_TRANSACTION_CURRENCY, "986");
+    if (this.valor) payload += this._getIdTamanhoEvalor(ID_TRANSACTION_AMOUNT, this.valor);
+    payload += this._getIdTamanhoEvalor(ID_COUNTRY_CODE, "BR") +
+      this._getIdTamanhoEvalor(ID_MERCHANT_NAME, this.nomeRecebedor) +
+      this._getIdTamanhoEvalor(ID_MERCHANT_CITY, this.cidadeRecebedor) +
       this._getAdicionalInformacao();
 
     return payload + this._getCRC16(payload);
