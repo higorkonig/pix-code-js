@@ -15,7 +15,7 @@ Gerador de código Pix para scaneamento com qr code;
 ```JS
 //Parâmetros obrigatórios
 
-import Pix from "@higorkonig/pix-js";
+import { Pix } from "@higorkonig/pix-js";
 
 const chavePix = '123e4567-e12b-12d1-a456-426655440000';
 const nomeRecebedor = 'Higor Konig';
@@ -49,11 +49,11 @@ $ npm i @higorkonig/pix-js
 | nomeRecebedor   |          13 |
 | cidadeRecebedor |          08 |
 
-
+<br>
 
 ```JS
 //Parâmetros opcionais
-import Pix from "@higorkonig/pix-js";
+import { Pix } from "@higorkonig/pix-js";
 
 const chavePix = '123e4567-e12b-12d1-a456-426655440000';
 const nomeRecebedor = 'Higor Konig';
